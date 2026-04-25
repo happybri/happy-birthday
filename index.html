@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selamat Ulang Tahun! 🎉</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 100%);
+            --accent-color: #ff80ab;
+            --text-color: #880e4f;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: var(--bg-gradient);
+            height: 100vh;
+            overflow: hidden; /* Mencegah scroll karena animasi balon */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-color);
+        }
+
+        /* Container Utama */
+        .card {
+            text-align: center;
+            z-index: 10;
+            width: 90%;
+            max-width: 400px;
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        /* Judul Bubble Style */
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.2rem;
+            color: white;
+            text-shadow: 3px 3px 0px var(--accent-color), 5px 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            animation: bounce 2s infinite ease-in-out;
+        }
+
+        /* Foto Frame */
+        .photo-container {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            margin: 0 auto 30px;
+        }
+
+        .profile-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid white;
+            box-shadow: 0 10px 25px rgba(255, 128, 171, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .photo-glow {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 50%;
+            background: white;
+            filter: blur(15px);
+            opacity: 0.6;
+            z-index: 1;
+            animation: pulseGlow 3s infinite;
+        }
+
+        /* Tombol-tombol */
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 200px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn-balloon {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .btn-music {
+            background-color: white;
+            color: var(--accent-color);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        /* Animasi Balon */
+        .balloon {
+            position: absolute;
+            bottom: -100px;
+            opacity: 0.7;
+            z-index: 1;
+            pointer-events: none;
+            animation: flyUp 8s linear infinite;
+        }
+
+        /* Keyframes */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        @keyframes flyUp {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-120vh) rotate(20deg); }
+        }
+
+        /* Dekorasi Tambahan */
+        .confetti {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #ffd54f;
+            border-radius: 2px;
+            animation: flyUp 5s linear infinite;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="balloon-container"></div>
+
+    <div class="card">
+        <h1>Selamat Ulang Tahun 🎉</h1>
+        
+        <div class="photo-container">
+            <div class="photo-glow"></div>
+            <img src="https://via.placeholder.com/180" alt="Birthday Person" class="profile-img">
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-balloon" onclick="createBalloon(5)">Klik untuk Balon 🎈</button>
+            <button class="btn-music" id="musicBtn" onclick="toggleMusic()">Play Music 🎵</button>
+        </div>
+    </div>
+
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        </audio>
+
+    <script>
+        const container = document.getElementById('balloon-container');
+        const colors = ['#FFC1CC', '#FF80AB', '#E1BEE7', '#B39DDB', '#F8BBD0'];
+
+        function createBalloon(num) {
+            for (let i = 0; i < num; i++) {
+                const balloon = document.createElement('div');
+                balloon.className = 'balloon';
+                
+                // Variasi Ukuran & Posisi
+                const size = Math.floor(Math.random() * 40) + 30;
+                balloon.style.width = size + 'px';
+                balloon.style.height = (size * 1.2) + 'px';
+                balloon.style.left = Math.random() * 100 + 'vw';
+                balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                balloon.style.borderRadius = '50% 50% 50% 50% / 40% 40% 60% 60%';
+                
+                // Variasi Kecepatan
+                balloon.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                
+                container.appendChild(balloon);
+
+                // Hapus elemen setelah animasi selesai agar HP tidak lag
+                setTimeout(() => {
+                    balloon.remove();
+                }, 8000);
+            }
+        }
+
+        // Buat balon awal secara otomatis
+        setInterval(() => {
+            if(document.querySelectorAll('.balloon').length < 15) {
+                createBalloon(1);
+            }
+        }, 2000);
+
+        // Fungsi Music
+        const music = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicBtn');
+
+        function toggleMusic() {
+            if (music.paused) {
+                music.play();
+                musicBtn.innerHTML = "Pause Music ⏸️";
+            } else {
+                music.pause();
+                musicBtn.innerHTML = "Play Music 🎵";
+            }
+        }
+    </script>
+</body>
+</html>
